@@ -35,7 +35,7 @@ export default function Home() {
   });
 
   // set input value
-  const handleInput = (event: { target: any }) => {
+  const handleInput = (event: { target: { value: string } }) => {
     setContractAddress(event.target.value);
   };
 
@@ -43,15 +43,6 @@ export default function Home() {
     setVote({ ...vote, contract: contractAddress });
     handleLoad();
   };
-
-  useEffect(() => {
-    if (localStorage.hasOwnProperty("contract")) {
-      const contract = localStorage.getItem("contract");
-      setVote({ ...vote, contract });
-      setContractAddress(contract || "");
-      handleLoad();
-    }
-  }, []);
 
   const handleLoad = () => {
     if (!isEthAddress(contractAddress)) {
@@ -90,6 +81,13 @@ export default function Home() {
     // Trigger the functions
     getTopicAndChoices();
   };
+
+  useEffect(() => {
+    if (localStorage.hasOwnProperty("contract")) {
+      const contract = localStorage.getItem("contract");
+      setContractAddress(contract || "");
+    }
+  }, []);
 
   const handleSubmit = (id: number) => {
     if (!isEthAddress(contractAddress)) {
