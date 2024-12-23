@@ -20,6 +20,8 @@ bun dev
 
 We will use <https://remix.ethereum.org/> for development and testing.
 
+Deployed on Sepolia: [0x6BF1f574417F8f2f0b9ca2a09012CB5a8378302c](https://sepolia.etherscan.io/tx/0xfffefec32ce2bb2548bbab5e02926e22d329143587a6bef3188260ef5ffc18bb)
+
 ```solidity
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
