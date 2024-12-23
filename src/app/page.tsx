@@ -63,7 +63,7 @@ export default function Home() {
         topic = await votingContract.voteTopic();
         // Call the voting contract for candidates count
         const count = await votingContract.candidatesCount();
-        for (let i = 0; i < count; i++) {
+        for (let i = 1; i <= count; i++) {
           // Call the voting contract for candidates by id
           const candidate = await votingContract.candidates(i);
           candidates.push({
@@ -101,6 +101,8 @@ export default function Home() {
 
         await transaction.wait();
         alert("Click the address button to refresh.");
+        // A simple handling once the value has been changed.
+        window.location.reload()
       } catch (err) {
         alert(err);
       }

@@ -24,6 +24,8 @@ We will use <https://remix.ethereum.org/> for development and testing.
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
+// @title Voting contract
+// @notice A simple demo of voting.
 contract Voting {
     // Candidate model
     struct Candidate {
@@ -32,42 +34,54 @@ contract Voting {
         uint256 voteCount;
     }
 
-    // Store account voted
+    // Store account voted. To prevent double vote casting.
     mapping(address => bool) public voters;
-    // Store candidate and fetch
+    // Store candidate and fetch.
     mapping(uint256 => Candidate) public candidates;
+
+    // The public states are accessible via inquiring.
     // Store candidates count
     uint256 public candidatesCount;
     address public owner;
-
     string public voteTopic;
 
-    // Indexed is for logged events will allow to search for events using indexed parameter as fileter
+    // indexed is for logged events will allow to search for events using indexed parameter as fileter
     event votedEvent(uint256 indexed _candidateId);
 
-    // Constructor
-    constructor(string memory voteTopic_, string[] memory names_) {
+    // @notice A constructor of the contract, indicate the initial vaules of the contract
+    // @param voteTopic_ A vote topic of this contract as a long string. As the length is not restricted
+    // the length should not be long to save the gas fee.
+    // @param candidate_ A candidate of the vote topic, accept a short value. If the value is large
+    // it may lead to deployment failure.
+    constructor(string memory voteTopic_, string[] memory candidate_) {
         voteTopic = voteTopic_;
         owner = msg.sender;
         // for loop candidates to be created
-        for (uint8 i = 0; i < names_.length; i++) {
-            addCandidate(names_[i]);
+        for (uint8 i = 0; i < candidate_.length; i++) {
+            addCandidate(candidate_[i]);
         }
     }
 
+    // @dev Accept only owner for the call.
     modifier onlyOwner(address caller) {
         require(msg.sender == owner, "only owner");
         _;
     }
 
-    // Add candidate, anyone outside the contract cannot add candidate
-    function addCandidate(string memory name) private onlyOwner(msg.sender) {
-        // add counter to the mapping
+    // @notice Add a candidate
+    // @param candidate A candidate of the vote topic
+    function addCandidate(string memory candidate)
+        public
+        onlyOwner(msg.sender)
+    {
+        // Add counter to the mapping
         candidatesCount++;
-        candidates[candidatesCount] = Candidate(candidatesCount, name, 0);
+        candidates[candidatesCount] = Candidate(candidatesCount, candidate, 0);
     }
 
-    // Update candidate's vote count
+    // @notice Add a vote count by candidate ID
+    // @dev Update candidate's vote count
+    // @param candidate ID A candidate ID to vote.
     function vote(uint256 candidateId) public {
         require(
             candidateId <= candidatesCount && candidateId > 0,
@@ -83,6 +97,9 @@ contract Voting {
         emit votedEvent(candidateId);
     }
 }
+
+// "How would you rate your experience with blockchain technology"
+// ["Beginner","Novice","Intermediate","Advanced","Expert"]
 ```
 
 ### Get ABI
